@@ -21,11 +21,11 @@
 
 > 训练营已为各位线下学员准备好环境，可跳过这步
 
-![PrangePi](images/1.png)
+![PrangePi](./images/1.png)
 
 启动OrangePi，并为其连接好屏幕键盘。连接显示器线时，需要注意，只能使用上面的HDMI接口：
 
-![PrangePi-HDMI](images/2.png)
+![PrangePi-HDMI](./images/2.png)
 
 更多信息可以参考这：[Orange Pi AI Pro 20T 用户手册](documents/OrangePi_AI_Pro_20T_昇腾_用户手册_v0.5.1.pdf)
 
