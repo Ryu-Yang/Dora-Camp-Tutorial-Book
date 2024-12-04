@@ -9,6 +9,7 @@
 > - 暂时无法在Pi内实现多模态大模型推理
 > - Pi的算力不高
 
+两台计算机都需要将`Dora-Camp-Tutorial`仓库clone到本地，仓库链接：[https://github.com/Ryu-Yang/Dora-Camp-Tutorial](https://github.com/Ryu-Yang/Dora-Camp-Tutorial)
 
 ## 0.1 实验所需硬件需求
 
@@ -133,17 +134,120 @@ PyCharm安装完成后配置conda的路径为：`D:\Enviroment\anaconda3\Library
 
 ### 0.2.3 CUDA安装
 
+推荐安装12.4版本
+
 参考这篇博客。[https://blog.csdn.net/weixin_52677672/article/details/135853106](https://blog.csdn.net/weixin_52677672/article/details/135853106)
 
 ### 0.2.4 rerun安装
 
+在确认rust安装成功后，在终端中执行
+
+```bash
+cargo install rerun-cli --locked
+```
+
+安装成功后，终端中执行
+```bash
+cargo install --list
+```
+
+将看到输出：
+```
+rerun-cli v0.20.2:
+    rerun.exe
+```
+
 ### 0.2.5 dora安装
+
+在确认rust安装成功后，在终端中执行
+
+```bash
+cargo install dora-cli --locked
+```
+
+安装成功后，终端中执行
+```bash
+dora -V
+```
+
+将看到输出：
+```
+dora-cli 0.3.7
+```
 
 ### 0.2.6 大模型推理环境配置
 
+首先切换到Dora-Camp虚拟环境
+
+```bash
+conda activate Dora-Camp
+```
+
+切换后命令行开头将显示虚拟环境名称，例如:
+
+```
+(Dora-Camp) C:\Users\Ryu-Yang>
+```
+
+然后在pytorch官网上选择合适的torch版本进行安装。官网链接：[https://pytorch.org/](https://pytorch.org/)
+
+```bash
+pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu124 --default-timeout=3600
+
+```
+
+然后再依次安装：
+
+```bash
+pip install transformers
+pip install qwen-vl-utils
+pip install optimum
+pip install auto-gptq
+```
+
 ### 0.2.6 安装Nodes Hub内和实验相关的node
 
+将dora仓库clone到本地
 
+```bash
+git clone https://github.com/dora-rs/dora.git
+```
+
+切换到dora/node-hub/dora-rerun文件夹
+
+```bash
+cd dora/node-hub/dora-rerun
+```
+
+安装该包
+
+```bash
+cargo install --path .
+```
+
+然后安装`llama-factory-recorder`
+
+```bash
+pip install llama-factory-recorder
+```
+
+> 除了上述的这几个包外，还有一些实验用到的node并没有通过这个方式安装，而是直接将代码放在了`Dora-Camp-Tutorial/src/`中，方便修改。
+
+### 0.2.7 执行测试
+
+切换到Dora-Camp-Tutorial/lab0/文件夹
+
+```bash
+cd Dora-Camp-Tutorial/lab0/
+```
+
+执行测试脚本
+
+```bash
+./test_pc_env_win64.ps1
+```
+
+正常情况下，将看到输出中有`PASS`
 
 ## 0.3 PC 安装环境（Linux）(待完善)
 
@@ -191,4 +295,6 @@ rustc 1.82.0 (f6e511eec 2024-10-15)
 
 ## 0.4 Pi 安装环境
 
-`Pi`内的环境可以直接下载镜像安装。[暂无]()
+`Pi`内的环境可以直接下载镜像安装。[暂未制作镜像]()
+
+> 训练营线下已准备好该环境
