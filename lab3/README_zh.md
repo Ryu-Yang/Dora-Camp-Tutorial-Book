@@ -1,10 +1,14 @@
-# 3. 实验3：视觉语言模型驱动的具身机器人（线下实验）
-## 3.1 视觉语言模型-VLM介绍
-## 3.2 实验3-1 横向移动抓取
-### 3.2.1 环境配置
+# 实验3：视觉语言模型驱动的具身机器人（线下实验）
+
+## 1. 视觉语言模型-VLM介绍
+
+## 2. 实验3-1 横向移动抓取
+
+### 2.1 环境配置
+
+本实验使用`Pi`和`PC`完成实验，操作需要分别在`Pi`和`PC`上完成。
 
 和之前的实验相同，检查完环境配置。
-
 
 **首先在PC上完成如下操作**
 
@@ -32,7 +36,7 @@ cargo install dora-rerun --locked
 
 PS：在windows下安装dora-rerun，如果用上面的命令可能后面会有问题，推荐把dora仓库clone下来，进入到`dora/node-hub/dora-rerun`文件夹,通过`cargo install --path .`命令安装。
 
-然后是通过pip安装大模型推理需要的包（在conda的虚拟环境下安装）
+然后是通过pip安装大模型推理需要的包（在conda的虚拟环境下安装）(lab0已安装了就跳过这步)
 
 ```bash
 pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu124 --default-timeout=3600
@@ -114,49 +118,40 @@ pip install opencv-video-capture
 cd Dora-Camp-Tutorial/
 ```
 
-### 3.2.2 配置yaml文件
+### 3.2.3 启动并查看结果
 
+同实验1和2，确认好机械臂正确连接，摄像头正常。
 
-### 3.2.4 启动并查看结果
-
-同实验1，确认好机械臂正确连接。
-
-然后确认摄像头正常连接，在终端输入：
+确认正常后在`PC`内启动dora coordinator:
 
 ```bash
-ls /dev/video*
+dora coordinator
 ```
 
-正常情况下，应该看到输出：
-```
-/dev/video0 /dev/video1 /dev/video2 /dev/video3
-```
-
-如若未正常显示，检查摄像头是否正确连接，并进入PCCAM状态
-
-> 注意：使用OrangePi上面的USB Hub连接摄像头时，需要把Hub上的所有连接都拔下来，再从摄像头开始依次插入
-
-确认上述正常后，启动dora的coordinator和daemon，在终端中输入：
+再新建一个命令行窗口，启动dora daemon:(这里的IP地址替换为前面记下的IP地址)
 
 ```bash
-dora up
+dora daemon -c 192.168.3.183
 ```
 
-成功启动后将看到输出：
-
-```
-started dora coordinator
-started dora daemon
-```
-
-然后再在终端中输入：
+然后在`Pi`内启动dora daemon:
 
 ```bash
-dora start ctrl_opencv.yml
+dora daemon -c 192.168.3.183 --machine-id pi
 ```
 
-启动后可以看到图像界面，如下图：
+> 注意：这里一定是要在`Dora-Camp-Tutorial/`目录下启动
 
-![追踪](images/1.png)
+然后回到`PC`上，
 
-随后，机械臂自动追踪黄色方块（根据opencv.py里写好的颜色），并停留在在其上。
+```bash
+dora start ./qwenvl2_robot_inference.yml
+```
+
+> 注意：这里是在`Dora-Camp-Tutorial/lab3/`目录下启动
+
+正常启动后会机械臂会回到默认位置。然后`PC`上会弹出一个rerun窗口，在上面可以看到两个摄像头的画面（可能需要加载一会），然后便可以等待大模型输出操作命令了，实现自己横向抓取瓶子。
+
+> 注意：摄像头角度和顺序可能需要手动调整，以及篮子的位置
+
+### 3.2.2 yaml文件解析
