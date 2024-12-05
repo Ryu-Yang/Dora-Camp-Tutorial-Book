@@ -1,7 +1,12 @@
-# 2. 实验2：使用OpenCV实现机械臂自动抓取和小车自动跟踪（线下实验）
-## 2.1 传统视觉识别-OpenCV
-## 2.2 实验2-1 机械臂自动抓取
-### 2.2.1 环境配置
+# 实验2：使用OpenCV实现机械臂自动抓取和小车自动跟踪（线下实验）
+
+## 1. 传统视觉识别-OpenCV
+
+## 2. 实验2-1 机械臂自动抓取
+
+### 2.1 环境配置
+
+本实验只使用`Pi`完成实验，所有操作均在`Pi`上完成。
 
 同实验1，检查完环境配置。
 
@@ -28,17 +33,63 @@ pip install opencv-python
 完成上述环境配置后，切换到本实验文件夹
 
 ```bash
-cd Dora-Embodied-AI-Camp/lab2
+cd Dora-Camp-Tutorial/lab2
 ```
 
-### 2.2.2 修改yaml文件
+### 2.2 启动并查看结果
 
-在`Dora-Embodied-AI-Camp/lab2`文件夹中已写好一个`ctrl_opencv.yml`文件，内容如下：
+同实验1，确认好机械臂正确连接。
+
+然后确认摄像头正常连接，在终端输入：
+
+```bash
+ls /dev/video*
+```
+
+正常情况下，应该看到输出：
+```
+/dev/video0 /dev/video1 /dev/video2 /dev/video3
+```
+
+如若未正常显示，检查摄像头是否正确连接，并进入PCCAM状态
+
+> 注意：使用OrangePi上面的USB Hub连接摄像头时，需要把Hub上的所有连接都拔下来，再从摄像头开始依次插入
+
+确认上述正常后，启动dora的coordinator和daemon，在终端中输入：
+
+```bash
+dora up
+```
+
+成功启动后将看到输出：
+
+```
+started dora coordinator
+started dora daemon
+```
+
+然后再在终端中输入：
+
+```bash
+dora start ctrl_opencv.yml
+```
+
+启动后可以看到图像界面，如下图：
+
+![追踪](images/1.png)
+
+随后，机械臂自动追踪黄色方块（根据opencv.py里写好的颜色），并停留在在其上。
+
+### 2.3 yaml文件解析
+
+在`Dora-Camp-Tutorial/lab2`文件夹中已写好一个`ctrl_opencv.yml`文件，内容如下：
 
 ```yaml
+# Run on Pi
+
 nodes:
   - id: opencv
-    path: opencv.py
+    path: ../src/dora_opencv.py
     inputs:
       key-interval: dora/timer/millis/10
       error-interval: dora/timer/millis/500
@@ -46,17 +97,17 @@ nodes:
       - error
       - key
 
-  - id: key-interpolation
-    path: key_interpolation.py
+  - id: key-text
+    path: ../src/key_text.py
     inputs:
       keyboard: opencv/key
     outputs:
       - text
 
   - id: trans-cmd
-    path: trans_cmd.py
+    path: ../src/trans_cmd.py
     inputs:
-      text: key-interpolation/text
+      key-keyboard: key-text/text
       error: opencv/error
     outputs:
       - movec
@@ -68,7 +119,7 @@ nodes:
       - goto
 
   - id: arm
-    path: gen72.py
+    path: ../src/gen72.py
     inputs:
       movec: trans-cmd/movec
       claw: trans-cmd/claw
@@ -78,12 +129,12 @@ nodes:
       stop: trans-cmd/stop
       goto: trans-cmd/goto
     env:
-      ROBOT_IP: 192.168.1.18  # gen72 机械臂默认IP
-
+      ROBOT_IP: 192.168.1.18  # gen72 robotic arm default IP address
+      SAVED_POSE_PATH: ../recorder/pose_library.json # The relative path of pose_library.json that relative to this yaml file.
 ```
-### 2.2.2 创建OpenCV图像识别节点同时实现按键检测
+### 2.4 创建OpenCV图像识别节点同时实现按键检测
 
-在`Dora-Embodied-AI-Camp/lab2`文件夹中已写好一个`opencv.py`文件，内容如下：
+在`Dora-Camp-Tutorial/src`文件夹中已写好一个`dora_opencv.py`文件，内容如下：
 
 ```python
 import os
@@ -198,6 +249,7 @@ for event in node:
         contours = extract_contour(final_inRange_hsv)
         draw_img = find_target(contours,draw_img)
         final_img = draw_center(target_list,draw_img)
+        error_x, error_y = get_error(target_list, draw_img)
         cv2.imshow('final_img', final_img)
 
         if event["id"] == "key-interval":
@@ -210,7 +262,6 @@ for event in node:
                 node.send_output("key", pa.array([chr(key)]))
 
         if event["id"] == "error-interval":
-            error_x, error_y = get_error(target_list,draw_img)
             node.send_output("error", pa.array([error_x, error_y]))
 
 cv2.destroyAllWindows()      #关闭展示窗口
@@ -218,42 +269,41 @@ capture.release()            #释放摄像头，若不释放，程序结束后�
 
 ```
 
-### 2.2.3 修改命令识别节点
+### 2.5 命令识别节点-error处理PID算法
 
 在`Dora-Embodied-AI-Camp/lab2`文件夹中已写好一个`trans_cmd.py`文件，内容如下：
 
 ```python
+from dora import Node
 import pyarrow as pa
 from enum import Enum
-from dora import Node
 
 
 PID_X = 0.0004
 PID_Y = -0.0003
 
 class Action(Enum):
-    Xp      = ("arm Xp", "movec", [0.01, 0, 0, 0, 0, 0, 0.1])
-    Xn      = ("arm Xn", "movec", [-0.01, 0, 0, 0, 0, 0, 0.1])
-    Yp      = ("arm Yp", "movec", [0, 0.01, 0, 0, 0, 0, 0.1])
-    Yn      = ("arm Yn", "movec", [0, -0.01, 0, 0, 0, 0, 0.1])
-    Zp      = ("arm Zp", "movec", [0, 0, 0.01, 0, 0, 0, 0.1])
-    Zn      = ("arm Zn", "movec", [0, 0, -0.01, 0, 0, 0, 0.1])
-    take    = ("arm take", "claw", [0])
-    put     = ("arm put", "claw", [100])
-
-    save    = ("save", "save", [0])
-    clear   = ("clear", "clear", [0])
-
-    begin   = ("begin", "begin", [0])
-    stop    = ("stop", "stop", [0])
-    goto    = ("goto", "goto", [0])
+    FORWARD = ("arm forward",   "movec", [0.02, 0, 0, 0, 0, 0, 0.1])
+    BACK    = ("arm backward",  "movec", [-0.02, 0, 0, 0, 0, 0, 0.1])
+    LEFT    = ("arm left",      "movec", [0, -0.02, 0, 0, 0, 0, 0.1])
+    RIGHT   = ("arm right",     "movec", [0, 0.02, 0, 0, 0, 0, 0.1])
+    UP      = ("arm up",        "movec", [0, 0, -0.02, 0, 0, 0, 0.1])
+    DOWN    = ("arm down",      "movec", [0, 0, 0.02, 0, 0, 0, 0.1])
+    CLOSE   = ("claw close",    "claw", [0])
+    OPEN    = ("claw open",     "claw", [100])
+    SAVE    = ("save",          "save", [0])
+    CLEAR   = ("clear",         "clear", [0])
+    BEGIN   = ("begin",         "begin", [0])
+    STOP    = ("stop",          "stop", [0])
+    GOTO    = ("goto",          "goto", [0])
 
 
 node = Node()
 
 for event in node:
     if event["type"] == "INPUT":
-        if event["id"] == "text":
+        event_id = event["id"]
+        if event_id == "key-keyboard" or event_id == "key-qwenvl":
             text = event["value"][0].as_py()
             text = text.replace(".", "")
             text = text.replace(".", "")
@@ -279,52 +329,8 @@ for event in node:
 
 ```
 
-### 2.2.4 启动并查看结果
-
-同实验1，确认好机械臂正确连接。
-
-然后确认摄像头正常连接，在终端输入：
-
-```bash
-ls /dev/video*
-```
-
-正常情况下，应该看到输出：
-```
-/dev/video0 /dev/video1 /dev/video2 /dev/video3
-```
-
-如若未正常显示，检查摄像头是否正确连接，并进入PCCAM状态
-
-> 注意：使用OrangePi上面的USB Hub连接摄像头时，需要把Hub上的所有连接都拔下来，再从摄像头开始依次插入
-
-确认上述正常后，启动dora的coordinator和daemon，在终端中输入：
-
-```bash
-dora up
-```
-
-成功启动后将看到输出：
-
-```
-started dora coordinator
-started dora daemon
-```
-
-然后再在终端中输入：
-
-```bash
-dora start ctrl_opencv.yml
-```
-
-启动后可以看到图像界面，如下图：
-
-![追踪](images/1.png)
-
-随后，机械臂自动追踪黄色方块（根据opencv.py里写好的颜色），并停留在在其上。
-
-## 2.3 四轮小车相关知识
-## 2.4 实验2-2 小车自动跟踪
-### 2.4.1 环境配置
-### 2.4.2 创建小车底盘操作节点
-### 2.4.3 启动并查看结果
+## 3 四轮小车相关知识
+## 4 实验2-2 小车自动跟踪
+### 4.1 环境配置
+### 4.2 创建小车底盘操作节点
+### 4.3 启动并查看结果

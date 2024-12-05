@@ -1,8 +1,8 @@
-# 0. 实验介绍与环境配置
+# 实验0：介绍与环境配置
 
-## 0.0 介绍
+## 0 介绍
 
-本实验主要使用两台计算机，分别将其称为`Pi`和`PC`，其中`Pi`负责摄像头的图像采集和机械臂及小车的控制，`PC`负责实现大模型推理。
+本指导书所有实验主要使用两台计算机，分别将其称为`Pi`和`PC`，其中`Pi`负责摄像头的图像采集和机械臂及小车的控制，`PC`负责实现大模型推理。
 
 > 理论上这两项任务都可集成到一台计算机内，基于如下原因暂时分开。
 > - 方便理解Dora的跨机器通信
@@ -11,9 +11,9 @@
 
 两台计算机都需要将`Dora-Camp-Tutorial`仓库clone到本地，仓库链接：[https://github.com/Ryu-Yang/Dora-Camp-Tutorial](https://github.com/Ryu-Yang/Dora-Camp-Tutorial)
 
-## 0.1 实验所需硬件需求
+## 1 实验所需硬件需求
 
-### 0.1.1 Pi
+### 1.1 Pi
 
 - 硬件: Orange Pi Pro 20T
 - 系统：Ubuntu22.04
@@ -25,7 +25,7 @@
 
 > 参加训练营线下的同学，线下已为您准备
 
-### 0.1.2 PC
+### 1.2 PC
 
 推荐使用个人的电脑。目前实验内容可支持在Windows10/11、Ubuntu、WSL2等上进行操作。硬件要求：自带nvidia独立显卡，独立显存大小最好8G往上。硬盘预留20G以上空间。
 
@@ -35,21 +35,21 @@
 
 > 参加训练营线下的同学，如若个人电脑满足不了需求，可以在交流群内发消息联系助教获取帮助
 
-### 0.1.3 Dora Kit 机器人开发套件
+### 1.3 Dora Kit 机器人开发套件
 
 就是机械臂和小车
 
 > 参加训练营线下的同学，线下已为您准备
 
-### 0.1.4 摄像头
+### 1.4 摄像头
 
 总共两个摄像头。需要是linux免驱动的。
 
 > 参加训练营线下的同学，线下已为您准备
 
-## 0.2 PC 安装环境（Windows）
+## 2 PC 安装环境（Windows）
 
-### 0.2.1 Rust 开发环境配置
+### 2.1 Rust 开发环境配置
 
 在Rust官网下载RUSTUP-INIT.EXE（64位）官网链接：[https://www.rust-lang.org/zh-CN/learn/get-started](https://www.rust-lang.org/zh-CN/learn/get-started)
 
@@ -99,7 +99,7 @@ rustc --version
 cargo 1.82.0 (8f40fc59f 2024-08-21)
 rustc 1.82.0 (f6e511eec 2024-10-15)
 ```
-### 0.2.2 conda安装和python虚拟环境配置
+### 2.2 conda安装和python虚拟环境配置
 
 conda的安装可以参考这篇博客，主要看前2个章节。[https://blog.csdn.net/wh0605/article/details/142979657](https://blog.csdn.net/wh0605/article/details/142979657)
 
@@ -126,19 +126,19 @@ base                     D:\Enviroment\anaconda3
 
 其中base的路径是根据conda的默认安装路径来的，Dora-Camp虚拟环境的路径则是默认在C盘的用户路径下。
 
-### 0.2.3 PyCharm/VSCode安装
+### 2.3 PyCharm/VSCode安装
 
 参考网上资料安装即可。
 
 PyCharm安装完成后配置conda的路径为：`D:\Enviroment\anaconda3\Library\bin\conda.bat`，其中`D:\Enviroment\anaconda3`为conda的安装路径
 
-### 0.2.3 CUDA安装
+### 2.3 CUDA安装
 
 推荐安装12.4版本
 
 参考这篇博客。[https://blog.csdn.net/weixin_52677672/article/details/135853106](https://blog.csdn.net/weixin_52677672/article/details/135853106)
 
-### 0.2.4 rerun安装
+### 2.4 rerun安装
 
 在确认rust安装成功后，在终端中执行
 
@@ -157,7 +157,7 @@ rerun-cli v0.20.2:
     rerun.exe
 ```
 
-### 0.2.5 dora安装
+### 2.5 dora安装
 
 在确认rust安装成功后，在终端中执行
 
@@ -175,7 +175,7 @@ dora -V
 dora-cli 0.3.7
 ```
 
-### 0.2.6 大模型推理环境配置
+### 2.6 大模型推理环境配置
 
 首先切换到Dora-Camp虚拟环境
 
@@ -205,7 +205,7 @@ pip install optimum
 pip install auto-gptq
 ```
 
-### 0.2.6 安装Nodes Hub内和实验相关的node
+### 2.6 安装Nodes Hub内和实验相关的node
 
 将dora仓库clone到本地
 
@@ -233,7 +233,7 @@ pip install llama-factory-recorder
 
 > 除了上述的这几个包外，还有一些实验用到的node并没有通过这个方式安装，而是直接将代码放在了`Dora-Camp-Tutorial/src/`中，方便修改。
 
-### 0.2.7 执行测试
+### 2.7 执行测试
 
 切换到Dora-Camp-Tutorial/lab0/文件夹
 
@@ -249,9 +249,9 @@ cd Dora-Camp-Tutorial/lab0/
 
 正常情况下，将看到输出中有`PASS`
 
-## 0.3 PC 安装环境（Linux）(待完善)
+## 3 PC 安装环境（Linux）(待完善)
 
-### 0.3.1 Rust 开发环境配置
+### 3.1 Rust 开发环境配置
 
 首先安装 Rust 版本管理器 rustup 和 Rust 包管理器 cargo，这里我们用官方的安装脚本来安装：
 
@@ -293,7 +293,7 @@ rustc --version
 rustc 1.82.0 (f6e511eec 2024-10-15)
 ```
 
-## 0.4 Pi 安装环境
+## 4 Pi 安装环境
 
 `Pi`内的环境可以直接下载镜像安装。[暂未制作镜像]()
 

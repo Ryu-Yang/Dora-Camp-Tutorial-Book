@@ -17,6 +17,8 @@
 
 ### 3.1 环境配置
 
+本实验只使用`Pi`完成实验，所有操作均在`Pi`上完成。
+
 假定您已准备好OrangePi并为其烧录了ubuntu22.04系统。
 
 > 训练营已为各位线下学员准备好环境，可跳过这步
@@ -426,11 +428,142 @@ for event in node:
 
 ```
 
-## 4. 多机器完成驱动
+## 4. 实验1-2 多机器完成驱动
+
 ### 4.1 环境配置
-### 4.2 配置yaml文件
-### 4.3 创建键盘监听节点
-### 4.4 创建按键识别节点
-### 4.5 创建命令识别节点
-### 4.6 创建GEN72机械臂驱动节点
-### 4.7 启动并查看结果
+
+本实验使用`Pi`和`PC`完成实验，操作需要分别在`Pi`和`PC`上完成。
+
+和上一个实验一样，在两台计算机上都检查一下dora是否正常安装。
+
+```bash
+dara -V
+```
+
+在`Pi`内，切换到Dora-Camp-Tutorial目录：
+
+```bash
+cd Dora-Camp-Tutorial/
+```
+
+在`PC`内，切换到Dora-Camp-Tutorial/lab1/Multiple-PC目录：
+
+```bash
+cd Dora-Camp-Tutorial/lab1/Multiple-PC
+```
+
+确保`Pi`和`PC`在同一个局域网内
+
+> 线下训练营可以通过实验场地的wifi来实现，wifi名称`HUAWEI-1F24RW`,wifi密码`gosim!@#$%`
+
+然后在`PC`内点击wifi，点击连接的wifi的属性，在打开的页面的属性一项内查看IPv4地址并记录下来。
+
+或者使用命令查看（windows）：
+
+```bash
+ipconfig
+```
+
+使用命令查看（linux）：
+
+```bash
+ifconfig
+```
+
+### 4.2 启动并查看结果
+
+首先在`PC`内启动dora coordinator:
+
+```bash
+dora coordinator
+```
+
+再新建一个命令行窗口，启动dora daemon:(这里的IP地址替换为前面记下的IP地址)
+
+```bash
+dora daemon -c 192.168.3.183
+```
+
+然后在`Pi`内启动dora daemon:
+
+```bash
+dora daemon -c 192.168.3.183 --machine-id pi
+```
+
+> 注意：这里一定是要在`Dora-Camp-Tutorial/`目录下启动
+
+然后回到`PC`上，
+
+```bash
+dora start ./ctrl_arm.yml
+```
+
+> 注意：这里是在`Dora-Camp-Tutorial/lab1/Multiple-PC/`目录下启动
+
+成功启动后机械臂将会到初始位置。接下来便可以通过按键`t`、`g`、`f`、`h`、`y`、`r`，控制机械臂的`前`、`后`、`左`、`右`、`上`、`下`了。通过`q`、`e`，控制机械爪的`抓取`和`放下`。`x`保存轨迹点，`c`清除所有轨迹点，`b`执行保存的轨迹点。
+
+### 4.3 yaml文件解析
+
+在`Dora-Camp-Tutorial/lab1/Multiple-PC`文件夹中已写好一个`ctrl_arm.yml`文件，内容如下：
+
+```yaml
+# Run on PC
+
+nodes:
+  - id: key-listener
+    path: ../../src/key_listener.py
+    inputs:
+      tick: dora/timer/millis/10
+    outputs:
+      - char
+
+  - id: key-text
+    path: ../../src/key_text.py
+    inputs:
+      keyboard: key-listener/char
+    outputs:
+      - text
+
+  - id: trans-cmd
+    path: ../../src/trans_cmd.py
+    inputs:
+      key-keyboard: key-text/text
+    outputs:
+      - movec
+      - claw
+      - save
+      - clear
+      - begin
+      - stop
+      - goto
+
+  - id: arm
+    path: ./src/gen72.py  # The relative path of gen72.py that relative to the path where you started the dora daemon on pi
+    _unstable_deploy:
+      machine: pi
+    inputs:
+      movec: trans-cmd/movec
+      claw: trans-cmd/claw
+      save: trans-cmd/save
+      clear: trans-cmd/clear
+      begin: trans-cmd/begin
+      stop: trans-cmd/stop
+      goto: trans-cmd/goto
+    env:
+      ROBOT_IP: 192.168.1.18  # gen72 robotic arm default IP address
+      SAVED_POSE_PATH: ./recorder/pose_library.json # The relative path of pose_library.json that relative to the path where you started the dora daemon on pi
+
+```
+
+相比于实验1-1，实验1-2的大部分节点都是运行在`PC`上的，如 `key-listener`、`key-text`、`trans-cmd`，只有`arm`节点是运行在`Pi`上的。在实验1-1中，dora的coordinater和daemon都运行在`Pi`中，而实验1-2中是`PC`运行：coordinater+daemon，`Pi`只运行一个daemon。
+
+这里详细解析arm节点。由于该节点内加上了下面这个键和键值：
+
+```yaml
+_unstable_deploy:
+    machine: pi
+```
+
+故表示该节点将运行在，名为pi的机器上。在`dora start`该yaml文件后，coordinator便会去尝试找到该机器上启动的daemon。pi机器上的daemon再根据path来找到pi上的代码或包，然后启动该节点。
+
+该节点的path路径和代码内打开文件的路径都将根据在`Pi`上启动daemon的路径。
