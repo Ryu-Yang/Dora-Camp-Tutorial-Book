@@ -2,6 +2,8 @@
 
 Documentation of Dora-Camp-Tutorial in Chinese and English.
 
+[中文](./README_zh.md)
+
 - lab0: 
 - lab1: 
 - lab2: 
