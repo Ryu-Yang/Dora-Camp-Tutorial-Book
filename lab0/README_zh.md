@@ -1,6 +1,6 @@
 # 实验0：介绍与环境配置
 
-## 0 介绍
+## 0. 介绍
 
 本指导书所有实验主要使用两台计算机，分别将其称为`Pi`和`PC`，其中`Pi`负责摄像头的图像采集和机械臂及小车的控制，`PC`负责实现大模型推理。
 
@@ -11,7 +11,7 @@
 
 两台计算机都需要将`Dora-Camp-Tutorial`仓库clone到本地，仓库链接：[https://github.com/Ryu-Yang/Dora-Camp-Tutorial](https://github.com/Ryu-Yang/Dora-Camp-Tutorial)
 
-## 1 实验所需硬件需求
+## 1. 实验所需硬件需求
 
 ### 1.1 Pi
 
@@ -47,7 +47,7 @@
 
 > 参加训练营线下的同学，线下已为您准备
 
-## 2 PC 安装环境（Windows）
+## 2. PC 安装环境（Windows）
 
 ### 2.1 Rust 开发环境配置
 
@@ -249,7 +249,7 @@ cd Dora-Camp-Tutorial/lab0/
 
 正常情况下，将看到输出中有`PASS`
 
-## 3 PC 安装环境（Linux）(待完善)
+## 3. PC 安装环境（Linux）(待完善)
 
 ### 3.1 Rust 开发环境配置
 
@@ -293,7 +293,7 @@ rustc --version
 rustc 1.82.0 (f6e511eec 2024-10-15)
 ```
 
-## 4 Pi 安装环境
+## 4. Pi 安装环境
 
 `Pi`内的环境可以直接下载镜像安装。[暂未制作镜像]()
 

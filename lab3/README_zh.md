@@ -1,4 +1,4 @@
-# 实验3：视觉语言模型驱动的具身机器人（线下实验）
+# 实验3：视觉语言模型驱动的具身机器人
 
 ## 1. 视觉语言模型-VLM介绍
 
@@ -58,8 +58,7 @@ pip install flash-attn
 cd <the path of your folder>
 ```
 
-然后分别创建`models`和`fine-tuning`文件夹后，切换到models文件夹内，下载qwen2-vl-2B模型
-
+然后分别创建`models`和`adapter`文件夹后，切换到models文件夹内，下载qwen2-vl-2B模型
 
 ```bash
 cd models
@@ -78,10 +77,10 @@ git clone https://www.modelscope.cn/Qwen/Qwen2-VL-2B-Instruct.git
 
 如果`model-00001-of-00002.safetensors`和`model-00002-of-00002.safetensors`没有下载下来，可以手动在页面上点击下载，下载下来后在拷贝到models/Qwen2-VL-2B-Instruct/目录下。
 
-再切换到fine-tuning文件夹，下载微调后的得到的文件
+再切换到adapter文件夹，下载微调后的得到的文件
 
 ```bash
-cd ../fine-tuning
+cd ../adapter
 ```
 
 下载地址，[https://www.modelscope.cn/RyuYang/Qwen2-VL-2B-Fine-Tuning-Grab-Bottle]
@@ -91,6 +90,14 @@ cd ../fine-tuning
 
 ```bash
 cd Dora-Camp-Tutorial/lab3
+```
+
+修改`Dora-Camp-Tutorial/lab3/qwenvl2_robot_inference.yml`文件内的第65-66行，把路径替换为前面保存模型和adapter的绝对路径：
+
+```yaml
+# 替换为自己电脑上的路径
+MODEL_NAME_OR_PATH: E:\Dora-Camp-Tutorial-Saves\models\Qwen2-VL-2B-Instruct
+ADAPTER_PATH: E:\Dora-Camp-Tutorial-Saves\adapter\Qwen2-VL-2B-Fine-Tuning-Grab-Bottle
 ```
 
 **然后在Pi上完成如下操作**
@@ -118,7 +125,7 @@ pip install opencv-video-capture
 cd Dora-Camp-Tutorial/
 ```
 
-### 3.2.3 启动并查看结果
+### 2.2 启动并查看结果
 
 同实验1和2，确认好机械臂正确连接，摄像头正常。
 
@@ -154,4 +161,4 @@ dora start ./qwenvl2_robot_inference.yml
 
 > 注意：摄像头角度和顺序可能需要手动调整，以及篮子的位置
 
-### 3.2.2 yaml文件解析
+### 2.3 yaml文件解析
