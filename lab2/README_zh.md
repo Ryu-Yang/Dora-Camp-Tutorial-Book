@@ -272,7 +272,7 @@ capture.release()            #释放摄像头，若不释放，程序结束后�
 
 ### 2.5 命令识别节点-error处理PID算法
 
-在`Dora-Embodied-AI-Camp/lab2`文件夹中已写好一个`trans_cmd.py`文件，内容如下：
+在`Dora-Camp-Tutorial/src`文件夹中已写好一个`trans_cmd.py`文件，内容如下：
 
 ```python
 from dora import Node
