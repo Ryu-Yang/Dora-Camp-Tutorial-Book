@@ -92,7 +92,7 @@ pip install -e ".[torch,metrics]"
 
 安装完成后，将`Dora-Camp-Tutorial/lab4/`内的`qwen2vl_lora_sft.yaml`拷贝到`LLaMA-Factory/`内
 
-`qwen2vl_lora_sft.yaml`内的第2行`model_name_or_path: `需要替换为模型的绝对路径。第11行`dataset`改为要训练的数据集。
+`qwen2vl_lora_sft.yaml`内的第2行`model_name_or_path: `需要替换为模型的绝对路径。第11行`dataset`改为要训练的数据集。根据情况看是否使用``flash_attn: fa2`
 
 再将实验4-1采集到的在数据集`Dora-Camp-Tutorial/recorder/data`，替换掉原本的`LLaMA-Factory/`中的`data`
 
@@ -102,5 +102,5 @@ pip install -e ".[torch,metrics]"
 llamafactory-cli train ./qwen2vl_lora_sft.yaml
 ```
 
-
+等待训练完成后，将在`LLaMA-Factory/saves`目录下保存adapter、检查点、训练误差等信息。
 
