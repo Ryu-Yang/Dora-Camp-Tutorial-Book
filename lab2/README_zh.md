@@ -137,6 +137,7 @@ nodes:
 在`Dora-Camp-Tutorial/src`文件夹中已写好一个`dora_opencv.py`文件，内容如下：
 
 ```python
+# 本代码来自于网络，原文链接https://blog.51cto.com/u_13544/11102518。对于原文代码更改如下：加入Dora节点、加入误差求解、while循环替换为遍历dora节点的事件
 import os
 import numpy as np
 import pyarrow as pa
