@@ -119,10 +119,11 @@ pip install opencv-python
 pip install opencv-video-capture
 ```
 
-完成上述环境配置后，切换到项目文件夹
+完成上述环境配置后，切换到项目文件夹，并激活环境
 
 ```bash
 cd Dora-Camp-Tutorial/
+conda activate Dora-Camp
 ```
 
 ### 2.2 启动并查看结果
@@ -155,7 +156,7 @@ dora daemon -c 192.168.3.183 --machine-id pi
 dora start ./qwenvl2_robot_inference.yml
 ```
 
-> 注意：这里是在`Dora-Camp-Tutorial/lab3/`目录下启动
+> 注意：这里是在`Dora-Camp-Tutorial/lab3/`目录下启动，且在Dora-Camp环境内
 
 正常启动后会机械臂会回到默认位置。然后`PC`上会弹出一个rerun窗口，在上面可以看到两个摄像头的画面（可能需要加载一会），然后便可以等待大模型输出操作命令了，实现自己横向抓取瓶子。
 

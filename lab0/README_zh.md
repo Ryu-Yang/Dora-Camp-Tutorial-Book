@@ -132,13 +132,13 @@ base                     D:\Enviroment\anaconda3
 
 PyCharm安装完成后配置conda的路径为：`D:\Enviroment\anaconda3\Library\bin\conda.bat`，其中`D:\Enviroment\anaconda3`为conda的安装路径
 
-### 2.3 CUDA安装
+### 2.4 CUDA安装
 
 推荐安装12.4版本
 
 参考这篇博客。[https://blog.csdn.net/weixin_52677672/article/details/135853106](https://blog.csdn.net/weixin_52677672/article/details/135853106)
 
-### 2.4 rerun安装
+### 2.5 rerun安装
 
 在确认rust安装成功后，在终端中执行
 
@@ -157,7 +157,7 @@ rerun-cli v0.20.2:
     rerun.exe
 ```
 
-### 2.5 dora安装
+### 2.6 dora安装
 
 在确认rust安装成功后，在终端中执行
 
@@ -175,7 +175,7 @@ dora -V
 dora-cli 0.3.7
 ```
 
-### 2.6 大模型推理环境配置
+### 2.7 大模型推理环境配置
 
 首先切换到Dora-Camp虚拟环境
 
@@ -205,7 +205,7 @@ pip install optimum
 pip install auto-gptq
 ```
 
-### 2.6 安装Nodes Hub内和实验相关的node
+### 2.8 安装Nodes Hub内和实验相关的node
 
 将dora仓库clone到本地
 
@@ -233,7 +233,7 @@ pip install llama-factory-recorder
 
 > 除了上述的这几个包外，还有一些实验用到的node并没有通过这个方式安装，而是直接将代码放在了`Dora-Camp-Tutorial/src/`中，方便修改。
 
-### 2.7 执行测试
+### 2.9 执行测试
 
 切换到Dora-Camp-Tutorial/lab0/文件夹
 
@@ -249,7 +249,7 @@ cd Dora-Camp-Tutorial/lab0/
 
 正常情况下，将看到输出中有`PASS`
 
-## 3. PC 安装环境（Linux）(待完善)
+## 3. PC 安装环境（Linux）
 
 ### 3.1 Rust 开发环境配置
 
@@ -291,6 +291,105 @@ rustc --version
 
 ```bash
 rustc 1.82.0 (f6e511eec 2024-10-15)
+```
+
+### 3.2 conda安装和python虚拟环境配置
+
+官网下载linux版本，官网下载链接[https://www.anaconda.com/download/](https://www.anaconda.com/download/)。
+
+给下载下来的.sh文件增加执行权限后，执行安装：
+
+```bash
+chmod +x Anaconda3-2024.10-1-Linux-x86_64.sh
+./Anaconda3-2024.10-1-Linux-x86_64.sh
+```
+
+安装全程yes就行，安装结束后输入命令使.bashrc文件生效：
+
+```bash
+ source ~/.bashrc
+```
+
+检查是否安装成功：
+```bash
+conda
+```
+
+安装成功后，添加清华源：
+
+```bash
+ conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/free/
+ conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/main/
+ conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/conda-forge/
+ conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/bioconda/
+ conda config --set show_channel_urls yes 
+ conda config --get channels
+```
+
+安装成功后，使用如下命令创建一个python3.11的虚拟环境：(安装期间需要二次确认，输入y然后回车即可)
+
+```bash
+conda create --name Dora-Camp python=3.11.10
+```
+
+然后检查环境是否安装成功
+
+```bash
+conda info --envs
+```
+
+将看到如下输出：
+
+```
+# conda environments:
+#
+base                  *  /root/anaconda3
+Dora-Camp                /root/anaconda3/envs/Dora-Camp
+```
+
+其中base的路径是根据conda的默认安装路径来的。
+
+### 3.3 CUDA安装
+
+推荐安装12.4版本
+
+参考这篇博客。[https://blog.csdn.net/weixin_52677672/article/details/135853106](https://blog.csdn.net/weixin_52677672/article/details/135853106)
+
+### 2.4 rerun安装
+
+在确认rust安装成功后，在终端中执行
+
+```bash
+cargo install rerun-cli --locked
+```
+
+安装成功后，终端中执行
+```bash
+cargo install --list
+```
+
+将看到输出：
+```
+rerun-cli v0.20.2:
+    rerun.exe
+```
+
+### 2.5 dora安装
+
+在确认rust安装成功后，在终端中执行
+
+```bash
+cargo install dora-cli --locked
+```
+
+安装成功后，终端中执行
+```bash
+dora -V
+```
+
+将看到输出：
+```
+dora-cli 0.3.7
 ```
 
 ## 4. Pi 安装环境

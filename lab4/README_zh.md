@@ -26,6 +26,12 @@ cd Dora-Camp-Tutorial/lab4
 LLAMA_FACTORY_ROOT_PATH: E:/Repositories/Dora-Camp-Tutorial/recorder # 替换为自己电脑上的路径
 ```
 
+切换到Dora-Camp环境
+
+```bash
+conda activate Dora-Camp
+```
+
 **然后在Pi上完成如下操作**
 
 同实验3完成环境配置后，切换到项目文件夹
