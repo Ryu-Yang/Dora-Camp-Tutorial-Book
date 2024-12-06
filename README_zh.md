@@ -1,5 +1,7 @@
 # Dora训练营指导书
 
+[ [English](./README.md) | 中文 ]
+
 ## 介绍
 这里是`Dora-Camp-Tutorial`的中英文指导书文档仓库。
 
