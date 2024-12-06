@@ -88,8 +88,17 @@ pip install -e ".[torch,metrics]"
 
 如果要在 Windows 平台上开启 FlashAttention-2，需要安装预编译的 flash-attn 库，支持 CUDA 12.1 到 12.2，请根据需求到 [flash-attention](https://github.com/bdashore3/flash-attention/releases) 下载对应版本安装。
 
-安装完成后，将`Dora-Camp-Tutorial/lab4/`内的
+安装完成后，将`Dora-Camp-Tutorial/lab4/`内的`qwen2vl_lora_sft.yaml`拷贝到`LLaMA-Factory/`内
 
+`qwen2vl_lora_sft.yaml`内的第2行`model_name_or_path: `需要替换为模型的绝对路径。第11行`dataset`改为要训练的数据集。
+
+再将实验4-1采集到的在数据集`Dora-Camp-Tutorial/recorder/data`，替换掉原本的`LLaMA-Factory/`中的`data`
+
+开始微调训练：
+
+```bash
+llamafactory-cli train ./qwen2vl_lora_sft.yaml
+```
 
 
 
