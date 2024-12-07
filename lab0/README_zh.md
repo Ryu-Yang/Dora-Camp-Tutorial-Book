@@ -349,13 +349,19 @@ Dora-Camp                /root/anaconda3/envs/Dora-Camp
 
 其中base的路径是根据conda的默认安装路径来的。
 
-### 3.3 CUDA安装
+### 3.3 Nvidia显卡驱动安装
+
+可以参考这篇博客[https://blog.csdn.net/weixin_45791008/article/details/139461790](https://blog.csdn.net/weixin_45791008/article/details/139461790)
+
+如果是WSL2的话，通过Micros Store安装的Ubuntu22.04自带Nvidia驱动
+
+### 3.4 CUDA安装
 
 推荐安装12.4版本
 
 参考这篇博客。[https://blog.csdn.net/weixin_52677672/article/details/135853106](https://blog.csdn.net/weixin_52677672/article/details/135853106)
 
-### 2.4 rerun安装
+### 3.5 rerun安装
 
 在确认rust安装成功后，在终端中执行
 
@@ -374,12 +380,13 @@ rerun-cli v0.20.2:
     rerun.exe
 ```
 
-### 2.5 dora安装
+### 3.6 dora安装
 
-在确认rust安装成功后，在终端中执行
+切换到Dora-Camp环境，在执行安装，在终端中执行
 
 ```bash
-cargo install dora-cli --locked
+conda acticate 
+pip install dora-rs-cli
 ```
 
 安装成功后，终端中执行
