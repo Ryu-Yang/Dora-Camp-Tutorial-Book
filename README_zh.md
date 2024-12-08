@@ -17,5 +17,7 @@
 - lab1: [实现Dora驱动机器人](./lab1/README_zh.md)
 - lab2: [使用OpenCV实现机械臂自动抓取和小车自动跟踪](./lab2/README_zh.md)
 - lab3: [视觉语言模型驱动的具身机器人](./lab3/README_zh.md)
-- lab4: [使用LLaMA-Factory进行模型微调并评估测试](./lab4/README_zh.md)
-- lab5: 自由发挥
+- lab4: [使用LLaMA-Factory进行模型微调并评估测试]()
+- lab5: [具身智能机器人的数据采集与微调](./lab4/README_zh.md)
+- lab6: [通过姿态识别控制机械臂]()
+- lab7: 自由发挥
