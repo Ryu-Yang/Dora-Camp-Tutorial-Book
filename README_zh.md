@@ -15,12 +15,12 @@
 
 ### 线上实验
 
-online-lab0: [前言]()
-online-lab1: [微调大模型]()
-online-lab2: [语音识别]()
-online-lab3: [GPT-SoVITS 语音合成]()
-online-lab4: [基于BERT的情绪识别]()
-online-lab5: [制作一位能对话的AI角色]()
+- online-lab0: [前言]()
+- online-lab1: [微调大模型]()
+- online-lab2: [语音识别]()
+- online-lab3: [GPT-SoVITS 语音合成]()
+- online-lab4: [基于BERT的情绪识别]()
+- online-lab5: [制作一位能对话的AI角色]()
 
 ### 线下实验
 
